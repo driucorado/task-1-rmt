@@ -230,4 +230,4 @@ group by cd.campaign_id, cd.bid, cd.budget;
 
 # So why this design 
 
-The following design is more complex that for a normal task like this but this allow me to have a platform for running more pipelines if is need it. Show my skills of using technologies like docker-compose for generating infrastructures. Also show my understand how pipelines works. and how can be an asset for task like this one.
+The following design is more complex that for a normal task like this but this allow me to have a platform for running more pipelines if is need it. Show my skills of using technologies like docker-compose for generating infrastructures. Also show my understand how pipelines works. and how can be an asset for task like this one and last show my knowledge about schema design.
