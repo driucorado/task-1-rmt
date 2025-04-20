@@ -26,7 +26,8 @@ As pipeline engine we used airflow. This allow os to monitor the pipelines progr
     # Fact Tables
     /pip_generate_fact_clicks.py
     /pip_generate_fact_impressions.py
-/docs
+/docs 
+# Jupyter Notebooks for initial exploration of the schema and model.
 /migrations_analytics
 # Migrations for Analytics DB (Clickhouse)
 ```
@@ -55,13 +56,7 @@ We are going to assume two things. One is the generation of CRT by campaign can 
 
 With that assumptions in place i choose to have a star schema were i treat independently the time dimension  from the facts (so is more easy to slide it in different time dimensions).
 
-Also we are going to build
-
-
-
-
-
-
+Also we are going to build a dimension table for campaign have the bid and the budget.
 
 Analytic Schema:
 ```mermaid
@@ -163,7 +158,6 @@ We used some pipelines to be able to have all the correct data in place.
 | [Daily Impressions](/dags/pipe_generate_daily_impressions.py) | Generate the daily impressions stats counting them by day |
 | [Fact Clicks](/dags/pipe_generate_daily_clicks.py) | Generate Fact Clicks Table, this table for this purpose is only a copy of the clicks table in postgresql but can be used to generate stats. |
 | [Fact Impressions](/dags/pipe_generate_daily_impressions.py) | Generate Fact Impression Table, this table for this purpose is only a copy of the impressions table in postgresql but can be used to generate stats. |
-
 
 ### How to Used
 
