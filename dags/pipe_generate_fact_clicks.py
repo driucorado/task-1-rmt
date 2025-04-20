@@ -64,7 +64,7 @@ with DAG(
             hook.execute(insert_query, values)
             logger.info(f"Inserted {len(values)} rows into {fact_table} table.")
 
-    # Setup Schema    
+    # Setup Schema
     # Get the last day of data in Clickhouse
     last_day = check_last_day_of_data()
     rs = get_clicks_from_production(last_day)

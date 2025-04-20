@@ -34,7 +34,7 @@ with DAG(
     """
     conn_string = "conn_analytic_db"
     schema = "default"
-    time_dim_table = "dim_time"
+    time_dim_table = "time_dimension"
     
     @task()
     def insert_time_values(df):

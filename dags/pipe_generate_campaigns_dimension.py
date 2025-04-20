@@ -40,22 +40,6 @@ with DAG(
         where_sql = " where c.id not in ({id_str})" if id_str else ""
         results = hook.get_records(f"select c.id, c.bid, c.budget from campaign c {where_sql}")
         return results
-
-    @task()
-    def create_campaigns_dimension():
-        """
-        Create Fact Impressions Table (Clickhouse format)
-        """
-        sql_table_ = f"""CREATE TABLE IF NOT EXISTS {campaign_dimension} (
-            bid Float32,
-            budget Float32,
-            campaign_id Int32
-        ) 
-        ENGINE = MergeTree()
-        ORDER BY (campaign_id)
-        """
-        hook = ClickHouseHook(clickhouse_conn_id=conn_string_analytic)
-        hook.execute(sql_table_)    
     
     @task()
     def insert_new_campaigns(data_rows):
@@ -74,8 +58,6 @@ with DAG(
             logger.info(f"Inserted {len(values)} rows into {campaign_dimension} table.")
 
     # Setup Schema
-
-    create_campaigns_dimension() >> \
     insert_new_campaigns(data_rows=get_campaigns(ids_list=check_campaigns()))
     
 

@@ -1,5 +1,5 @@
 # Trigger the airflow scheduler
-setup_1: infra setup_airflow 
+setup_1: infra install_python setup_airflow 
 
 # Creates the connections and move the dags to the airflow folder
 setup_2: create_connections_production create_analytic_connections install_dag 
@@ -7,6 +7,8 @@ setup_2: create_connections_production create_analytic_connections install_dag
 # Start Airflow
 setup_3: start_airflow
 
+install_python:
+    uv sync
 
 list_dags:
     uv run airflow dags list

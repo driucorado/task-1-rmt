@@ -43,11 +43,11 @@ with DAG(
         
         """
         hook = PostgresHook(conn_string)
-        results = hook.get_records("select c.advertiser_id, ci.campaign_id, " \
+        results = hook.get_records("select ci.campaign_id, " \
         "DATE_TRUNC ('day', ci.created_at) as day, count(1) count_clicks " \
         "from clicks ci join campaign c on ci.campaign_id = c.id " \
         "where ci.created_at > %s " \
-        "group by ci.campaign_id, c.advertiser_id, DATE_TRUNC ('day', ci.created_at)",  parameters=(from_date,))
+        "group by ci.campaign_id, DATE_TRUNC ('day', ci.created_at)",  parameters=(from_date,))
         return results
   
     
@@ -57,13 +57,13 @@ with DAG(
         Insert clicks into analytic table
         """
         hook = ClickHouseHook(clickhouse_conn_id=conn_string_analytic)
-        insert_query = f"INSERT INTO {schema_analytic}.{daily_click_table} (advertiser_id, campaign_id, created_at, count_of_clicks) VALUES"
+        insert_query = f"INSERT INTO {schema_analytic}.{daily_click_table} (campaign_id, created_at, count_of_clicks) VALUES"
         # TODO paginate properly
         batch_size = 50
         for i in range(0, len(data_rows), batch_size):
             batch = data_rows[i:i + batch_size]
             # Transform to tuple array
-            values = [(row[0], row[1], row[2], row[3]) for row in batch]
+            values = [(row[0], row[1], row[2]) for row in batch]
             hook.execute(insert_query, values)
             logger.info(f"Inserted {len(values)} rows into {daily_click_table} table.")
 

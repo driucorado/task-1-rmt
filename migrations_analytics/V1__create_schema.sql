@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS campaign_dimension (
     campaign_id Int32
 ) 
 ENGINE = MergeTree()
-ORDER BY (campaign_id)
+ORDER BY (campaign_id);
 
 -- Fact Impressions
 CREATE TABLE IF NOT EXISTS fact_impressions (
