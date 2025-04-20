@@ -1,0 +1,81 @@
+# Original from https://github.com/retailmediatools/hiring-data-engineer-task 
+services:
+  # -------------------------------------
+  # PostgreSQL
+  # -------------------------------------
+  postgres:
+    image: postgres:17
+    container_name: psql_source
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_HOST_AUTH_METHOD: trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "postgres"]
+      interval: 5s
+      retries: 5
+      
+  # -------------------------------------
+  # ClickHouse
+  # -------------------------------------
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: ch_analytics
+    # Add User
+    environment:
+      CLICKHOUSE_USER: admin
+      CLICKHOUSE_PASSWORD: admin
+      CLICKHOUSE_DB: default
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: 1
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    ports:
+      - "8123:8123"
+      - "9000:9000"
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 5s
+      retries: 5
+
+  # -------------------------------------
+  # Flyway Migrations
+  # -------------------------------------
+  flyway:
+    image: flyway/flyway
+    container_name: db_migrations
+    depends_on:
+      postgres:
+        condition: service_healthy
+        # restart: true
+    command: -url=jdbc:postgresql://postgres:5432/postgres -user=postgres -locations=filesystem:/flyway/sql migrate
+    volumes:
+      - ./migrations/:/flyway/sql
+    environment:
+      FLYWAY_CONNECT_RETRIES: 10
+
+  flyway_clickhouse:
+    image: hubbitus/flyway-clickhouse
+    container_name: db_migrations_clickhouse
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+    # command: -url=jdbc:clickhouse://clickhouse:5432/default -user=admin -password=admin -locations=filesystem:/flyway/sql migrate
+    command: -connectRetries=10 migrate
+    volumes:
+      - ./migrations_analytics/:/flyway/sql
+      - ./migrations_analytics/conf:/flyway/conf
+    environment:
+      FLYWAY_CONNECT_RETRIES: 10
+
+volumes:
+  postgres_data:
+  clickhouse_data:
