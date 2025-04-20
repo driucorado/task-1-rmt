@@ -172,11 +172,13 @@ Run the following commands in order in different terminals
 - command: `just setup_1`
 - command: `just setup_2`
 - command: `just setup_3`
+- command: `just generate_data`
+- command: `just install_dag`
 - command: `just run_dags`
 
 
-
 #### KPIS
+You can run the following queries to get KPIs.
 
 ##### Click-Through Rate (CTR) by campaign
 
