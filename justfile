@@ -12,7 +12,10 @@ list_dags:
     uv run airflow dags list
 
 run_dags:
+    uv run airflow dags trigger generate_time_dimension
     uv run airflow dags trigger generate_campaigns_dimension
+    uv run airflow dags trigger generate_daily_clicks
+    uv run airflow dags trigger generate_daily_impressions
 
 infra:
     docker-compose up -d
