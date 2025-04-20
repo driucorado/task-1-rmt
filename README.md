@@ -40,7 +40,7 @@ As pipeline engine we used airflow. This allow os to monitor the pipelines progr
 
 ## Instructions
 
-1. just setup_airflow
+
 
 ## Design
 
@@ -170,6 +170,11 @@ Run the following commands in order in different terminals
 - command: `just install_dag`
 - command: `just run_dags`
 
+When everything is done running and is running in the background. you can monitor the pipelines using the following:
+
+1. go [airflow page](http://localhost:8080/login)
+2. use `admin1` and `admin` as password.
+3. select active dags. 
 
 #### KPIS
 You can run the following queries to get KPIs.
